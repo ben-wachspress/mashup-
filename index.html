@@ -6,27 +6,181 @@
     <title>Upload Photos</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
             text-align: center;
             padding: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #fffbdd;
+            background-image: linear-gradient(90deg, transparent, transparent 19px, #c6a789 19px, #c6a789 20px, transparent 20px), 
+                              linear-gradient(#ffed90 0.1em, transparent 0.1em);
+            background-size: 100% 1.5em;
+            position: relative;
         }
-        .upload-container {
-          margin-top: 50px;
-          background-color: coral;
-          padding: 10px;
-          border-radius: 5px;
+        
+        body::before {
+            content: "";
+            position: absolute;
+            left: 40px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #ff5252;
+        }
+        
+        .banner-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ff5252;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-bottom: 3px solid #c43c3c;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin-left: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .button {
+            background-color: #ff5252;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition-duration: 0.2s;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .button:hover {
+            background-color: #c43c3c;
+            transform: scale(1.05);
+        }
+
+        #typing-text {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            height: 30px;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #333;
+            background-color: rgba(255, 255, 255, 0.4);
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+            min-width: 300px;
+        }
+        
+        .page-title {
+            margin-top: 80px; 
+            font-size: 22px; 
+            font-weight: bold;
+            color: #333;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        
+        .page-title::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #c43c3c;
+        }
+        
+        .pencil-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            transform: rotate(45deg);
+            font-size: 30px;
+            color: #555;
+        }
+        
+        @media (max-width: 600px) {
+            body::before {
+                left: 20px;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="upload-container">
-        <h1>Upload Your Photos</h1>
-        <input type="file" id="fileInput" multiple accept="image/*">
-        <input type="text" id="imageText" placeholder="Enter text for the image">
-        <button onclick="savePhotos()">Upload and View Collage</button>
-        <button onclick="window.location.href='collage.html'">Go to Collage</button>
+    <div class="banner-container">
+        <div>Mad Libs Generator</div>
+        <img src="madlibsface.png" alt="Mad Libs Logo" class="logo">
     </div>
+    <div class="page-title">Choose Your Story</div>
+    <div class="button-container">
+        <button class="button" onclick= "location.href='story1.html'" >Two Friends</button>
+        <button class="button" onclick= "location.href='story2.html'">Trip Gone Wrong</button>
+        <button class="button" onclick= "location.href='story3.html'">Adventure Time</button>
+    </div>
+    <div id="typing-text"></div>
+    <div class="pencil-icon">✏️</div>
+
     <script>
+        const textElement = document.getElementById("typing-text");
+        const textArray = ["Once there was a boy...", "The first time I ever...", "I knew things would never be the same when..."];
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeEffect() {
+            const currentText = textArray[textIndex];
+            if (isDeleting) {
+                textElement.textContent = currentText.substring(0, charIndex--);
+            } else {
+                textElement.textContent = currentText.substring(0, charIndex++);
+            }
+
+            if (!isDeleting && charIndex === currentText.length) {
+                isDeleting = true;
+                setTimeout(typeEffect, 1000);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex = (textIndex + 1) % textArray.length;
+                setTimeout(typeEffect, 500);
+            } else {
+                // Add a small random delay for more natural typing
+                const randomDelay = isDeleting ? 40 + Math.random() * 20 : 80 + Math.random() * 40;
+                setTimeout(typeEffect, randomDelay);
+            }
+        }
+        
+        typeEffect();
     </script>
 </body>
 </html>

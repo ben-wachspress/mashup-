@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Friends - Mad Libs</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #fffbdd;
+            background-image: linear-gradient(90deg, transparent, transparent 19px, #c6a789 19px, #c6a789 20px, transparent 20px), 
+                              linear-gradient(#ffed90 0.1em, transparent 0.1em);
+            background-size: 100% 1.5em;
+            position: relative;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            left: 40px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #ff5252;
+        }
+        
+        .banner-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ff5252;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-bottom: 3px solid #c43c3c;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin-left: 10px;
+        }
+        
+        .input-container {
+            margin-top: 100px;
+            background-color: rgba(255, 255, 255, 0.4);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #userInput {
+            padding: 8px;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            border: 1px solid #c6a789;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .button {
+            background-color: #ff5252;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition-duration: 0.2s;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .button:hover {
+            background-color: #c43c3c;
+            transform: scale(1.05);
+        }
+        
+        #story {
+            margin-top: 30px;
+            font-size: 18px;
+            max-width: 600px;
+            text-align: left;
+            padding: 20px;
+            line-height: 1.5;
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #prompt {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .pencil-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            transform: rotate(45deg);
+            font-size: 30px;
+            color: #555;
+        }
+        
+        @media (max-width: 600px) {
+            body::before {
+                left: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="banner-container">
+        <div>Two Friends - Mad Libs</div>
+        <img src="madlibsface.png" alt="Mad Libs Logo" class="logo">
+    </div>
+    <div class="input-container">
+        <p id="prompt">Enter a plural noun of living entities:</p>
+        <input type="text" id="userInput">
+        <button class="button" onclick="nextPrompt()">Next</button>
+    </div>
+    <div id="story"></div>
+    <div class="pencil-icon">✏️</div>
+
+    <script>
+        const prompts = [
+            "Enter a plural noun of living entities",
+            "Enter a name",
+            "Enter another name",
+            "Enter a verb ending in -ing",
+            "Enter a infinitive verb (ie. to swim, to run)",
+            "Enter an adjective",
+            "Enter a disease",
+            "Enter a past tense verb",
+            "Enter a feeling"
+        ];
+        
+        let userResponses = [];
+        let currentPromptIndex = 0;
+        
+        const inputField = document.getElementById("userInput");
+        const nextButton = document.querySelector(".button");
+    
+        // Disable the button initially
+        nextButton.disabled = true;
+        nextButton.style.opacity = "0.5";
+    
+        // Listen for input changes to enable/disable the button
+        inputField.addEventListener("input", () => {
+            if (inputField.value.trim() !== "") {
+                nextButton.disabled = false;
+                nextButton.style.opacity = "1";
+            } else {
+                nextButton.disabled = true;
+                nextButton.style.opacity = "0.5";
+            }
+        });
+    
+        function nextPrompt() {
+            userResponses.push(inputField.value);
+            inputField.value = "";
+    
+            // Disable the button again after submission
+            nextButton.disabled = true;
+            nextButton.style.opacity = "0.5";
+    
+            currentPromptIndex++;
+    
+            if (currentPromptIndex < prompts.length) {
+                document.getElementById("prompt").innerText = prompts[currentPromptIndex];
+    
+                // Change button text on the last prompt
+                if (currentPromptIndex === prompts.length - 1) {
+                    nextButton.innerText = "See Story!";
+                }
+            } else {
+                generateStory();
+            }
+        }
+        
+        function generateStory() {
+            const rawStory = `There once were two <span style="color: #c43c3c; font-weight: bold;">${userResponses[0]}</span> 
+                named <span style="color: #c43c3c; font-weight: bold;">${userResponses[1]}</span> and 
+                <span style="color: #c43c3c; font-weight: bold;">${userResponses[2]}</span>. Their favorite thing to do together was 
+                <span style="color: #c43c3c; font-weight: bold;">${userResponses[3]}</span>. They decided to go rogue and today was the day they were finally going 
+                <span style="color: #c43c3c; font-weight: bold;">${userResponses[4]}</span>. What a(n) 
+                <span style="color: #c43c3c; font-weight: bold;">${userResponses[5]}</span> day! Things took a turn though when 
+                <span style="color: #c43c3c; font-weight: bold;">${userResponses[1]}</span> caught a bad case of 
+                <span style="color: #c43c3c; font-weight: bold;">${userResponses[6]}</span> and 
+                <span style="color: #c43c3c; font-weight: bold;">${userResponses[7]}</span> all over 
+                <span style="color: #c43c3c; font-weight: bold;">${userResponses[2]}</span>, who was very 
+                <span style="color: #c43c3c; font-weight: bold;">${userResponses[8]}</span>. Their friendship was never the same.`;
+
+            document.querySelector(".input-container").style.display = "none";
+            const storyContainer = document.getElementById("story");
+            storyContainer.innerHTML = ""; // Clear previous content
+
+            // Set up a temporary div to parse the HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = rawStory;
+
+            // Extract all text nodes and span elements
+            const storyParts = [];
+            function extractContent(node) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    // Handle text nodes - split by words and spaces
+                    const parts = node.textContent.split(/(\s+)/);
+                    parts.forEach(part => {
+                        if (part) storyParts.push({type: 'text', content: part});
+                    });
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    // Handle element nodes
+                    if (node.tagName.toLowerCase() === 'span') {
+                        // For span elements, keep them intact
+                        storyParts.push({type: 'span', content: node.outerHTML});
+                    } else {
+                        // For other elements, process their children
+                        Array.from(node.childNodes).forEach(child => extractContent(child));
+                    }
+                }
+            }
+
+            Array.from(tempDiv.childNodes).forEach(node => extractContent(node));
+
+            // Create a handwritten effect
+            let index = 0;
+            function typeText() {
+                if (index < storyParts.length) {
+                    storyContainer.innerHTML += storyParts[index].content;
+                    index++;
+                    
+                    // Add a small random delay for a more natural typing effect
+                    const randomDelay = 50 + Math.random() * 50;
+                    setTimeout(typeText, randomDelay);
+                    
+                    // Add occasional "pen scratching" sound effect
+                    if (Math.random() > 0.8) {
+                        const scratchSound = new Audio();
+                        // This would be the path to your scratch sound effect
+                        // scratchSound.src = "scratch.mp3";
+                        // scratchSound.volume = 0.2;
+                        // scratchSound.play();
+                    }
+                }
+            }
+
+            typeText();
+        }
+    </script>
+</body>
+</html>
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Friends - Mad Libs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .banner-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #033d83;
+            color: white;
+            width: 100%;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin-left: 10px;
+        }
+        .input-container {
+            margin-top: 80px;
+        }
+        .button {
+            background-color: #033d83;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-family: fantasy;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition-duration: 0.2s;
+        }
+        .button:hover {
+            background-color: rgb(233, 25, 6);
+            padding: 12px 26px;
+        }
+        #story {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner-container">
+        <div>Two Friends - Mad Libs</div>
+        <img src="madlibsface.png" alt="Mad Libs Logo" class="logo">
+    </div>
+    <div class="input-container">
+        <p id="prompt">Enter a plural noun:</p>
+        <input type="text" id="userInput">
+        <button class="button" onclick="nextPrompt()">Next</button>
+    </div>
+    <div id="story"></div>
+
+    <script>
+        const prompts = [
+            "Enter a plural noun of living entities",
+            "Enter a name",
+            "Enter another name",
+            "Enter a verb ending in -ing",
+            "Enter a infinitive verb (ie. to swim, to run)",
+            "Enter an adjective",
+            "Enter a disease",
+            "Enter a past tense verb",
+            "Enter a feeling"
+        ];
+        
+        let userResponses = [];
+        let currentPromptIndex = 0;
+        
+        const inputField = document.getElementById("userInput");
+        const nextButton = document.querySelector(".button");
+    
+        // Disable the button initially
+        nextButton.disabled = true;
+        nextButton.style.opacity = "0.5";
+    
+        // Listen for input changes to enable/disable the button
+        inputField.addEventListener("input", () => {
+            if (inputField.value.trim() !== "") {
+                nextButton.disabled = false;
+                nextButton.style.opacity = "1";
+            } else {
+                nextButton.disabled = true;
+                nextButton.style.opacity = "0.5";
+            }
+        });
+    
+        function nextPrompt() {
+            userResponses.push(inputField.value);
+            inputField.value = "";
+    
+            // Disable the button again after submission
+            nextButton.disabled = true;
+            nextButton.style.opacity = "0.5";
+    
+            currentPromptIndex++;
+    
+            if (currentPromptIndex < prompts.length) {
+                document.getElementById("prompt").innerText = prompts[currentPromptIndex];
+    
+                // Change button text on the last prompt
+                if (currentPromptIndex === prompts.length - 1) {
+                    nextButton.innerText = "See Story!";
+                }
+            } else {
+                generateStory();
+            }
+        }
+        
+    function generateStory() {
+    const rawStory = `There once were two <span style="color: darkred;">${userResponses[0]}</span> 
+        named <span style="color: darkred;">${userResponses[1]}</span> and 
+        <span style="color: darkred;">${userResponses[2]}</span>. Their favorite thing to do together was 
+        <span style="color: darkred;">${userResponses[3]}</span>. They decided to go rogue and today was the day they were finally going 
+        <span style="color: darkred;">${userResponses[4]}</span>. What a(n) 
+        <span style="color: darkred;">${userResponses[5]}</span> day! Things took a turn though when 
+        <span style="color: darkred;">${userResponses[1]}</span> caught a bad case of 
+        <span style="color: darkred;">${userResponses[6]}</span> and 
+        <span style="color: darkred;">${userResponses[7]}</span> all over 
+        <span style="color: darkred;">${userResponses[2]}</span>, who was very 
+        <span style="color: darkred;">${userResponses[8]}</span>. Their friendship was never the same.`;
+
+    document.querySelector(".input-container").style.display = "none";
+    const storyContainer = document.getElementById("story");
+    storyContainer.innerHTML = ""; // Clear previous content
+
+    // Parse the HTML content first
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = rawStory;
+    
+    // Extract all text nodes and elements
+    const allNodes = [];
+    function extractTextAndElements(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            // Split text into words
+            const words = node.textContent.split(/(\s+)/);
+            words.forEach(word => {
+                if (word.trim()) allNodes.push({type: 'text', content: word});
+                else if (word) allNodes.push({type: 'text', content: word});
+            });
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.tagName === 'SPAN') {
+                // Keep spans intact
+                allNodes.push({type: 'element', content: node.outerHTML});
+            } else {
+                // Process children of other elements
+                Array.from(node.childNodes).forEach(child => extractTextAndElements(child));
+            }
+        }
+    }
+    
+    Array.from(tempDiv.childNodes).forEach(node => extractTextAndElements(node));
+    
+    // Type out the content
+    let index = 0;
+    
+    function typeWriter() {
+        if (index < allNodes.length) {
+            storyContainer.innerHTML += allNodes[index].content;
+            index++;
+            setTimeout(typeWriter, 100); // Adjust speed
+        }
+    }
+    
+    typeWriter();
+}
+    </script>
+    
+</body>
+</html> -->
