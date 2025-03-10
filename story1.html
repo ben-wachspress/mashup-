@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Two Friends - Mad Libs</title>
+    <!-- Font Awesome for share icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -121,6 +123,93 @@
             display: none;
         }
         
+        .share-container {
+            margin-top: 15px;
+            opacity: 0;
+            display: none;
+            background-color: rgba(255, 255, 255, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .share-title {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .share-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+            position: relative;
+        }
+        
+        .share-button:hover {
+            transform: scale(1.1);
+        }
+        
+        .facebook {
+            background-color: #3b5998;
+        }
+        
+        .twitter {
+            background-color: #1da1f2;
+        }
+        
+        .whatsapp {
+            background-color: #25d366;
+        }
+        
+        .email {
+            background-color: #ea4335;
+        }
+        
+        .clipboard {
+            background-color: #6c757d;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background-color: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            bottom: 45px;
+        }
+        
+        .tooltip.show {
+            opacity: 1;
+        }
+        
+        .button-text {
+            font-size: 12px;
+            margin-top: 5px;
+            white-space: nowrap;
+            display: block;
+            position: absolute;
+            bottom: -20px;
+        }
+        
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -133,6 +222,10 @@
         @media (max-width: 600px) {
             body::before {
                 left: 20px;
+            }
+            
+            .share-buttons {
+                flex-wrap: wrap;
             }
         }
     </style>
@@ -150,24 +243,38 @@
         <button class="button" onclick="nextPrompt()">Next</button>
     </div>
     <div id="story"></div>
+    <div class="share-container" id="shareContainer">
+        <h3 class="share-title">Share your Mad Lib with friends!</h3>
+        <div class="share-buttons">
+            <div class="share-button email" onclick="shareViaEmail()">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="share-button clipboard" onclick="copyToClipboard()" id="copyButton">
+                <i class="fa-regular fa-copy"></i>
+                <span class="tooltip" id="tooltip">Copied!</span>
+            </div>
+        </div>
+    </div>
     <div class="restart-container" id="restartContainer">
         <button class="button" onclick="startNewStory()">Start Over</button>
     </div>
 
     <script>
         const prompts = [
-            "Enter a name",
-            "Enter another name",
-            "Enter a verb ending in -ing",
-            "Enter a infinitive verb (ie. to swim, to run)",
-            "Enter an adjective",
-            "Enter a disease",
-            "Enter a past tense verb",
-            "Enter a feeling"
+            "Enter a plural noun of a living entity:",
+            "Enter a name:",
+            "Enter another name:",
+            "Enter a verb ending in -ing:",
+            "Enter an infinitive verb (ie. to swim, to run):",
+            "Enter an adjective:",
+            "Enter a disease:",
+            "Enter a past tense verb:",
+            "Enter a feeling:"
         ];
         
         let userResponses = [];
         let currentPromptIndex = 0;
+        let finalStory = "";
         
         const inputField = document.getElementById("userInput");
         const nextButton = document.querySelector(".button");
@@ -221,6 +328,9 @@
                 <span style="color: #c43c3c; font-weight: bold;">${userResponses[7]}</span> all over 
                 <span style="color: #c43c3c; font-weight: bold;">${userResponses[2]}</span>, who was very 
                 <span style="color: #c43c3c; font-weight: bold;">${userResponses[8]}</span>. Their friendship was never the same.`;
+
+            // Create plain text version for sharing
+            finalStory = `My Mad Lib: Two Friends\n\nThere once were two ${userResponses[0]} named ${userResponses[1]} and ${userResponses[2]}. Their favorite thing to do together was ${userResponses[3]}. They decided to go rogue and today was the day they were finally going ${userResponses[4]}. What a(n) ${userResponses[5]} day! Things took a turn though when ${userResponses[1]} caught a bad case of ${userResponses[6]} and ${userResponses[7]} all over ${userResponses[2]}, who was very ${userResponses[8]}. Their friendship was never the same.\n\nCreate your own at madlibs.example.com!`;
 
             document.querySelector(".input-container").style.display = "none";
             const storyContainer = document.getElementById("story");
@@ -280,6 +390,14 @@
                     setTimeout(typeText, randomDelay);
                 } else {
                     scratchSound.pause();
+                    
+                    // Show share options
+                    const shareContainer = document.getElementById("shareContainer");
+                    shareContainer.style.display = "block";
+                    setTimeout(() => {
+                        shareContainer.classList.add("fade-in");
+                    }, 10);
+                    
                     // Show restart button after story is complete with fade-in effect
                     const restartContainer = document.getElementById("restartContainer");
                     restartContainer.style.display = "block";
@@ -289,6 +407,22 @@
                 }
             }
             typeText();
+        }
+                
+        function shareViaEmail() {
+            const subject = encodeURIComponent("Check out the Mad Lib I created!");
+            const body = encodeURIComponent(finalStory);
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }
+        
+        function copyToClipboard() {
+            navigator.clipboard.writeText(finalStory).then(() => {
+                const tooltip = document.getElementById("tooltip");
+                tooltip.classList.add("show");
+                setTimeout(() => {
+                    tooltip.classList.remove("show");
+                }, 2000);
+            });
         }
 
         function startNewStory() {
