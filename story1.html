@@ -53,6 +53,12 @@
             width: 50px;
             height: 50px;
             margin-left: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .logo:hover {
+            transform: scale(1.1);
         }
         
         .input-container {
@@ -83,6 +89,7 @@
             cursor: pointer;
             transition-duration: 0.2s;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            margin: 10px 5px;
         }
         
         .button:hover {
@@ -108,6 +115,20 @@
             color: #333;
         }
         
+        .restart-container {
+            margin-top: 20px;
+            opacity: 0;
+            display: none;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s forwards;
+        }
         
         @media (max-width: 600px) {
             body::before {
@@ -119,18 +140,22 @@
 <body>
     <div class="banner-container">
         <div>Two Friends - Mad Libs</div>
-        <img src="madlibsface.png" alt="Mad Libs Logo" class="logo">
+        <a href="index.html">
+            <img src="madlibsface.png" alt="Mad Libs Logo" class="logo" title="Return to Home">
+        </a>
     </div>
     <div class="input-container">
-        <p id="prompt">Enter a plural noun of living entities:</p>
+        <p id="prompt">Enter a plural noun of a living entity:</p>
         <input type="text" id="userInput">
         <button class="button" onclick="nextPrompt()">Next</button>
     </div>
     <div id="story"></div>
+    <div class="restart-container" id="restartContainer">
+        <button class="button" onclick="startNewStory()">Start Over</button>
+    </div>
 
     <script>
         const prompts = [
-            "Enter a plural noun of a living entity",
             "Enter a name",
             "Enter another name",
             "Enter a verb ending in -ing",
@@ -255,9 +280,20 @@
                     setTimeout(typeText, randomDelay);
                 } else {
                     scratchSound.pause();
+                    // Show restart button after story is complete with fade-in effect
+                    const restartContainer = document.getElementById("restartContainer");
+                    restartContainer.style.display = "block";
+                    setTimeout(() => {
+                        restartContainer.classList.add("fade-in");
+                    }, 10); // Small delay to ensure display change has taken effect
                 }
             }
             typeText();
+        }
+
+        function startNewStory() {
+            // Reload the page to start a new story
+            window.location.reload();
         }
     </script>
 </body>
