@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Two Friends - Mad Libs</title>
-    <!-- Font Awesome for share icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
@@ -164,18 +163,6 @@
             transform: scale(1.1);
         }
         
-        .facebook {
-            background-color: #3b5998;
-        }
-        
-        .twitter {
-            background-color: #1da1f2;
-        }
-        
-        .whatsapp {
-            background-color: #25d366;
-        }
-        
         .email {
             background-color: #ea4335;
         }
@@ -330,7 +317,7 @@
                 <span style="color: #c43c3c; font-weight: bold;">${userResponses[8]}</span>. Their friendship was never the same.`;
 
             // Create plain text version for sharing
-            finalStory = `My Mad Lib: Two Friends\n\nThere once were two ${userResponses[0]} named ${userResponses[1]} and ${userResponses[2]}. Their favorite thing to do together was ${userResponses[3]}. They decided to go rogue and today was the day they were finally going ${userResponses[4]}. What a(n) ${userResponses[5]} day! Things took a turn though when ${userResponses[1]} caught a bad case of ${userResponses[6]} and ${userResponses[7]} all over ${userResponses[2]}, who was very ${userResponses[8]}. Their friendship was never the same.\n\nCreate your own at madlibs.example.com!`;
+            finalStory = `My Mad Lib: Two Friends\n\nThere once were two ${userResponses[0]} named ${userResponses[1]} and ${userResponses[2]}. Their favorite thing to do together was ${userResponses[3]}. They decided to go rogue and today was the day they were finally going ${userResponses[4]}. What a(n) ${userResponses[5]} day! Things took a turn though when ${userResponses[1]} caught a bad case of ${userResponses[6]} and ${userResponses[7]} all over ${userResponses[2]}, who was very ${userResponses[8]}. Their friendship was never the same.`;
 
             document.querySelector(".input-container").style.display = "none";
             const storyContainer = document.getElementById("story");

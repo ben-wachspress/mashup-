@@ -63,6 +63,15 @@
             justify-content: center;
         }
 
+        .bottom-text {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            color: black;
+            padding: 10px;
+        }
+
         .button {
             background-color: #ff5252;
             color: white;
@@ -137,14 +146,17 @@
     <div class="page-title">Choose Your Story</div>
     <div class="button-container">
         <button class="button" onclick= "location.href='story1.html'" >Two Friends</button>
-        <button class="button" onclick= "location.href='story2.html'">Trip Gone Wrong</button>
+        <button class="button" onclick= "location.href='story2.html'">Spring Break</button>
         <button class="button" onclick= "location.href='story3.html'">Adventure Time</button>
+    </div>
+    <div class="bottom-text">
+        This is a digital version of <a href="https://madlibs.com/" target="_blank" style="color: black;">Mad Libs</a>.
     </div>
     <div id="typing-text"></div>
 
     <script>
         const textElement = document.getElementById("typing-text");
-        const textArray = ["Once there was a boy...", "The first time I ever...", "I knew things would never be the same when..."];
+        const textArray = ["There once were two...", "For Spring Break...", "I knew things would never be the same when..."];
         let textIndex = 0;
         let charIndex = 0;
         let isDeleting = false;

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Break Trip - Mad Libs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #fffbdd;
+            background-image: linear-gradient(90deg, transparent, transparent 19px, #c6a789 19px, #c6a789 20px, transparent 20px),
+                linear-gradient(#ffed90 0.1em, transparent 0.1em);
+            background-size: 100% 1.5em;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            left: 40px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #e9d208;
+        }
+
+        .banner-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f79f1b;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-bottom: 3px solid #f79f1b;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+        }
+
+        .input-container {
+            margin-top: 100px;
+            background-color: rgba(255, 255, 255, 0.4);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #userInput {
+            padding: 8px;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            border: 1px solid #c6a789;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .button {
+            background-color: #ff5252;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition-duration: 0.2s;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            margin: 10px 5px;
+        }
+
+        .button:hover {
+            background-color: #ff5252;
+            transform: scale(1.05);
+        }
+
+        #story {
+            margin-top: 30px;
+            font-size: 18px;
+            max-width: 600px;
+            text-align: left;
+            padding: 20px;
+            line-height: 1.5;
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        #prompt {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .restart-container {
+            margin-top: 20px;
+            opacity: 0;
+            display: none;
+        }
+
+        .share-container {
+            margin-top: 15px;
+            opacity: 0;
+            display: none;
+            background-color: rgba(255, 255, 255, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .share-title {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .share-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+            position: relative;
+        }
+
+        .share-button:hover {
+            transform: scale(1.1);
+        }
+
+        .email {
+            background-color: #ea4335;
+        }
+
+        .clipboard {
+            background-color: #6c757d;
+        }
+
+        .tooltip {
+            position: absolute;
+            background-color: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            bottom: 45px;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+
+        .button-text {
+            font-size: 12px;
+            margin-top: 5px;
+            white-space: nowrap;
+            display: block;
+            position: absolute;
+            bottom: -20px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @media (max-width: 600px) {
+            body::before {
+                left: 20px;
+            }
+
+            .share-buttons {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="banner-container">
+        <div>Spring Break - Mad Libs</div>
+        <a href="index.html">
+            <img src="madlibsface.png" alt="Mad Libs Logo" class="logo" title="Return to Home">
+        </a>
+    </div>
+    <div class="input-container">
+        <p id="prompt">Enter a name:</p>
+        <input type="text" id="userInput">
+        <button class="button" onclick="nextPrompt()">Next</button>
+    </div>
+    <div id="story"></div>
+    <div class="share-container" id="shareContainer">
+        <h3 class="share-title">Share your Mad Lib with friends!</h3>
+        <div class="share-buttons">
+            <div class="share-button email" onclick="shareViaEmail()">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="share-button clipboard" onclick="copyToClipboard()" id="copyButton">
+                <i class="fa-regular fa-copy"></i>
+                <span class="tooltip" id="tooltip">Copied!</span>
+            </div>
+        </div>
+    </div>
+    <div class="restart-container" id="restartContainer">
+        <button class="button" onclick="startNewStory()">Start Over</button>
+    </div>
+
+    <script>
+        const prompts = [
+            "Enter a name:",
+            "Enter another name:",
+            "Enter a country:",
+            "Enter a number:",
+            "Enter a fruit:",
+            "Enter something you'd find in compost:",
+            "Enter a color:",
+            "Enter a flower:",
+            "Enter a candy:",
+            "Enter a liquid:",
+            "Enter a children's food:",
+            "Enter a verb ending in -ing:"
+        ];
+
+        let userResponses = [];
+        let currentPromptIndex = 0;
+        let finalStory = "";
+
+        const inputField = document.getElementById("userInput");
+        const nextButton = document.querySelector(".button");
+
+        // Disable the button initially
+        nextButton.disabled = true;
+        nextButton.style.opacity = "0.5";
+
+        // Listen for input changes to enable/disable the button
+        inputField.addEventListener("input", () => {
+            if (inputField.value.trim() !== "") {
+                nextButton.disabled = false;
+                nextButton.style.opacity = "1";
+            } else {
+                nextButton.disabled = true;
+                nextButton.style.opacity = "0.5";
+            }
+        });
+
+        function nextPrompt() {
+            userResponses.push(inputField.value);
+            inputField.value = "";
+
+            // Disable the button again after submission
+            nextButton.disabled = true;
+            nextButton.style.opacity = "0.5";
+
+            currentPromptIndex++;
+
+            if (currentPromptIndex < prompts.length) {
+                document.getElementById("prompt").innerText = prompts[currentPromptIndex];
+
+                // Change button text on the last prompt
+                if (currentPromptIndex === prompts.length - 1) {
+                    nextButton.innerText = "See Story!";
+                }
+            } else {
+                generateStory();
+            }
+        }
+
+        function generateStory() {
+            const rawStory = `For Spring Break, <span style="color: #c43c3c; font-weight: bold;">${userResponses[0]}</span> and 
+        <span style="color: #c43c3c; font-weight: bold;">${userResponses[1]}</span> decided to go on a trip to 
+        <span style="color: #c43c3c; font-weight: bold;">${userResponses[2]}</span> even though the State Department rated the travel risk as 
+        <span style="color: #c43c3c; font-weight: bold;">${userResponses[3]}</span> out of 10. When they got to their hotel though, they realized that it was not what they expected. 
+        The hotel was shaped like a <span style="color: #c43c3c; font-weight: bold;">${userResponses[4]}</span> and the beds smelled like 
+        <span style="color: #c43c3c; font-weight: bold;">${userResponses[5]}</span>. <span style="color: #c43c3c; font-weight: bold;">${userResponses[0]}</span> and 
+        <span style="color: #c43c3c; font-weight: bold;">${userResponses[1]}</span> knew they couldn't stay, so they grabbed their bags, and went to a resort called 
+        <span style="color: #c43c3c; font-weight: bold;">${userResponses[6]}</span> <span style="color: #c43c3c; font-weight: bold;">${userResponses[7]}</span> Palace. It was better than they could've imagined. 
+        Buckets filled with <span style="color: #c43c3c; font-weight: bold;">${userResponses[8]}</span>, pools of 
+        <span style="color: #c43c3c; font-weight: bold;">${userResponses[9]}</span>, and all-you-can-eat 
+        <span style="color: #c43c3c; font-weight: bold;">${userResponses[10]}</span>. They spent their trip laughing, smiling, and 
+        <span style="color: #c43c3c; font-weight: bold;">${userResponses[11]}</span> on the beach.`;
+
+            // Create plain text version for sharing
+            finalStory = `My Mad Lib: Spring Break Adventure\n\nFor Spring Break, ${userResponses[0]} and ${userResponses[1]} decided to go on a trip to ${userResponses[2]} even though the State Department rated the travel risk as ${userResponses[3]} out of 10. When they got to their hotel though, they realized that it was not what they expected. The hotel was shaped like a ${userResponses[4]} and the beds smelled like ${userResponses[5]}. ${userResponses[0]} and ${userResponses[1]} knew they couldn't stay, so they grabbed their bags, and went to a resort called ${userResponses[6]} ${userResponses[7]} Palace. It was better than they could've imagined. Buckets filled with ${userResponses[8]}, pools of ${userResponses[9]}, and all-you-can-eat ${userResponses[10]}. They spent their trip laughing, smiling, and ${userResponses[11]} on the beach.`;
+
+            document.querySelector(".input-container").style.display = "none";
+            const storyContainer = document.getElementById("story");
+            storyContainer.innerHTML = "";
+            storyContainer.style.display = "block";
+
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = rawStory;
+
+            const storyParts = [];
+            function extractContent(node) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    const parts = node.textContent.split(/(\s+)/);
+                    parts.forEach(part => {
+                        if (part) storyParts.push({ type: 'text', content: part });
+                    });
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    if (node.tagName.toLowerCase() === 'span') {
+                        storyParts.push({ type: 'span', content: node.outerHTML });
+                    } else {
+                        Array.from(node.childNodes).forEach(child => extractContent(child));
+                    }
+                }
+            }
+
+            Array.from(tempDiv.childNodes).forEach(node => extractContent(node));
+
+            let index = 0;
+            const scratchSound = new Audio();
+            scratchSound.src = "scratch.mp3";
+            scratchSound.volume = 0.2;
+            let soundPlayed = false;
+
+            function typeText() {
+                if (!soundPlayed) {
+                    scratchSound.play();
+                    soundPlayed = true;
+                }
+
+                if (index < storyParts.length) {
+                    storyContainer.innerHTML += storyParts[index].content;
+                    index++;
+                    const randomDelay = 50 + Math.random() * 50;
+                    setTimeout(typeText, randomDelay);
+                } else {
+                    scratchSound.pause();
+                    const shareContainer = document.getElementById("shareContainer");
+                    shareContainer.style.display = "block";
+                    setTimeout(() => {
+                        shareContainer.classList.add("fade-in");
+                    }, 10);
+
+                    const restartContainer = document.getElementById("restartContainer");
+                    restartContainer.style.display = "block";
+                    setTimeout(() => {
+                        restartContainer.classList.add("fade-in");
+                    }, 10);
+                }
+            }
+
+            typeText();
+
+        }
+
+        function shareViaEmail() {
+            const subject = encodeURIComponent("Check out the Mad Lib I created!");
+            const body = encodeURIComponent(finalStory);
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(finalStory).then(() => {
+                const tooltip = document.getElementById("tooltip");
+                tooltip.classList.add("show");
+                setTimeout(() => {
+                    tooltip.classList.remove("show");
+                }, 2000);
+            });
+        }
+
+        function startNewStory() {
+            // Reload the page to start a new story
+            window.location.reload();
+        }
+    </script>
+</body>
+
+</html>
