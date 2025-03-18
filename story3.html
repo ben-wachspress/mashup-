@@ -73,7 +73,7 @@
 
         #userInput {
             padding: 8px;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Comic Sans MS', sans-serif;
             border: 1px solid #c6a789;
             border-radius: 5px;
             background-color: rgba(255, 255, 255, 0.8);
@@ -84,7 +84,7 @@
             color: white;
             padding: 10px 20px;
             font-size: 16px;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Comic Sans MS', sans-serif;
             text-align: center;
             border: none;
             border-radius: 5px;
@@ -234,6 +234,7 @@
     <div class="input-container">
         <p id="prompt">Enter a name:</p>
         <input type="text" id="userInput">
+        <input type="text" id="userInput" onkeypress="handleKeyPress(event)">
         <button class="button" onclick="nextPrompt()">Next</button>
     </div>
     <div id="story"></div>
@@ -254,6 +255,11 @@
     </div>
 
     <script>
+    function handleKeyPress(event) {
+    if (event.key === "Enter") {
+        nextPrompt();
+         }
+    }
         const prompts = [
             "Enter a body part:",
             "Enter a food:",
