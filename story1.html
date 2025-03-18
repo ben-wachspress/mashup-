@@ -226,7 +226,7 @@
     </div>
     <div class="input-container">
         <p id="prompt">Enter a plural noun of a living entity:</p>
-        <input type="text" id="userInput">
+        <input type="text" id="userInput" onkeypress="handleKeyPress(event)">
         <button class="button" onclick="nextPrompt()">Next</button>
     </div>
     <div id="story"></div>
@@ -247,6 +247,11 @@
     </div>
 
     <script>
+    function handleKeyPress(event) {
+        if (event.key === "Enter") {
+        nextPrompt();
+         }
+    }
         const prompts = [
             "Enter a plural noun of a living entity:",
             "Enter a name:",
